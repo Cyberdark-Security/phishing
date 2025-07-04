@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenador Anti-Phishing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3, #FF9800, #F44336);
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .exercise-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+            text-align: left;
+        }
+
+        .email-header {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .email-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 150px;
+        }
+
+        .btn-phishing {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
+        }
+
+        .btn-phishing:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(238, 90, 36, 0.4);
+        }
+
+        .btn-legitimate {
+            background: linear-gradient(135deg, #4ecdc4, #26d0ce);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .btn-legitimate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+        }
+
+        .result-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score.perfect {
+            color: #4CAF50;
+        }
+
+        .score.good {
+            color: #FF9800;
+        }
+
+        .score.needs-improvement {
+            color: #F44336;
+        }
+
+        .celebration {
+            font-size: 64px;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .feedback {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .feedback h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .feedback ul {
+            color: #856404;
+            padding-left: 20px;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .question-counter {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .warning-badge {
+            background: #ff4757;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .safe-badge {
+            background: #2ed573;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="quiz-screen">
+            <h1>🛡️ Entrenador Anti-Phishing</h1>
+            <p>Evalúa cada situación y decide si es phishing o legítimo</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            
+            <div class="question-counter" id="counter">Pregunta 1 de 10</div>
+            
+            <div class="exercise-card" id="exercise">
+                <!-- Contenido del ejercicio se carga aquí -->
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-phishing" onclick="answer(true)">
+                    ⚠️ ES PHISHING
+                </button>
+                <button class="btn btn-legitimate" onclick="answer(false)">
+                    ✅ ES LEGÍTIMO
+                </button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <div class="result-screen">
+                <div id="celebration"></div>
+                <h2 id="result-title"></h2>
+                <div class="score" id="score"></div>
+                <div id="feedback"></div>
+                <button class="restart-btn" onclick="restartQuiz()">🔄 Intentar de Nuevo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                type: "email",
+                content: {
+                    from: "seguridad@banco-santander.com",
+                    subject: "Urgente: Actualice su información de seguridad",
+                    body: "Estimado cliente,\n\nHemos detectado actividad sospechosa en su cuenta. Por favor, haga clic en el enlace a continuación para verificar su identidad:\n\nhttp://banco-santander-verificacion.tk/login\n\nTiene 24 horas para completar este proceso o su cuenta será suspendida.\n\nAtentamente,\nEquipo de Seguridad"
+                },
+                isPhishing: true,
+                explanation: "Dominio sospechoso (.tk), urgencia artificial, amenaza de suspensión, y enlace que no va al sitio oficial del banco."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "noreply@netflix.com",
+                    subject: "Tu factura de Netflix",
+                    body: "Hola,\n\nTu factura mensual de Netflix está disponible. Puedes revisarla en tu cuenta o descargar el PDF adjunto.\n\nGracias por ser suscriptor de Netflix.\n\nEquipo de Netflix"
+                },
+                isPhishing: false,
+                explanation: "Email legítimo: dominio oficial, sin urgencia, sin enlaces sospechosos, información estándar de facturación."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "microsoft-security@outlook.com",
+                    subject: "¡Felicidades! Has ganado $1,000,000",
+                    body: "¡FELICIDADES!\n\nHas sido seleccionado para recibir $1,000,000 en nuestra lotería internacional de Microsoft.\n\nPara reclamar tu premio, envía los siguientes datos:\n- Nombre completo\n- Número de documento\n- Número de cuenta bancaria\n\nResponde INMEDIATAMENTE para no perder tu premio."
+                },
+                isPhishing: true,
+                explanation: "Premio falso, solicita información personal sensible, presión por respuesta inmediata, Microsoft no hace loterías."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "admin@miempresa.com",
+                    subject: "Cambio de contraseña del sistema",
+                    body: "Estimado colaborador,\n\nInformamos que el sistema de gestión tendrá mantenimiento este fin de semana. No es necesario realizar ninguna acción.\n\nLos cambios entrarán en vigor el lunes.\n\nIT Support"
+                },
+                isPhishing: false,
+                explanation: "Email interno legítimo: informa sobre mantenimiento, no solicita acciones del usuario, no tiene enlaces sospechosos."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "support@paypal.com",
+                    subject: "Verificación de cuenta requerida",
+                    body: "Su cuenta de PayPal ha sido limitada debido a actividad inusual.\n\nPara restaurar el acceso, haga clic aquí: http://paypal-verification.net/restore\n\nIngrese su usuario, contraseña y número de tarjeta para verificar su identidad.\n\nEste proceso debe completarse en 48 horas."
+                },
+                isPhishing: true,
+                explanation: "Dominio falso (paypal-verification.net), solicita credenciales y datos de tarjeta, presión temporal, amenaza de limitación."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "team@slack.com",
+                    subject: "Nuevo mensaje en tu workspace",
+                    body: "Tienes 3 mensajes nuevos en tu workspace 'Equipo Desarrollo'.\n\nAbrir Slack\n\nSi no deseas recibir estas notificaciones, puedes configurarlas desde tu perfil."
+                },
+                isPhishing: false,
+                explanation: "Email legítimo: notificación estándar de la aplicación, dominio oficial, opción de cancelar notificaciones."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "security@amazon.com",
+                    subject: "Inicio de sesión desde nuevo dispositivo",
+                    body: "Hola,\n\nDetectamos un nuevo inicio de sesión en tu cuenta desde:\n- Dispositivo: iPhone\n- Ubicación: Bogotá, Colombia\n- Fecha: 4 de julio, 2025\n\nSi no fuiste tú, cambia tu contraseña inmediatamente.\n\nEquipo de Seguridad de Amazon"
+                },
+                isPhishing: false,
+                explanation: "Alerta legítima de seguridad: informa sobre actividad real, dominio oficial, no solicita datos personales."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "no-reply@apple.com",
+                    subject: "Su Apple ID ha sido deshabilitado",
+                    body: "Su Apple ID ha sido deshabilitado por violación de términos de servicio.\n\nPara reactivarlo, debe verificar su identidad haciendo clic aquí:\nhttp://apple-id-verification.com/unlock\n\nProporcione su ID, contraseña y respuestas de seguridad.\n\nTiene 24 horas antes de que se elimine permanentemente."
+                },
+                isPhishing: true,
+                explanation: "Dominio falso, amenaza de eliminación, solicita credenciales completas, presión temporal extrema."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "receipts@uber.com",
+                    subject: "Recibo de tu viaje",
+                    body: "Gracias por viajar con Uber.\n\nViaje: Casa - Oficina\nFecha: 4 de julio, 2025\nTotal: $15,000 COP\n\nPuedes ver los detalles completos en la app de Uber.\n\nGracias por elegirnos."
+                },
+                isPhishing: false,
+                explanation: "Recibo legítimo: dominio oficial, información específica del viaje, no solicita acciones adicionales."
+            },
+            {
+                type: "email",
+                content: {
+                    from: "admin@gobierno.co",
+                    subject: "Reembolso tributario pendiente",
+                    body: "Estimado contribuyente,\n\nTiene un reembolso tributario de $2,450,000 COP pendiente.\n\nPara procesarlo, complete el formulario en:\nhttp://reembolso-tributario.tk/form\n\nIngrese su número de cédula, datos bancarios y declare sus ingresos.\n\nProceso válido hasta mañana."
+                },
+                isPhishing: true,
+                explanation: "Dominio sospechoso (.tk), solicita información financiera sensible, reembolso no solicitado, urgencia artificial."
+            }
+        ];
+
+        let currentExercise = 0;
+        let score = 0;
+        let incorrectAnswers = [];
+
+        function loadExercise() {
+            const exercise = exercises[currentExercise];
+            const counter = document.getElementById('counter');
+            const exerciseDiv = document.getElementById('exercise');
+            const progress = document.getElementById('progress');
+            
+            counter.textContent = `Pregunta ${currentExercise + 1} de ${exercises.length}`;
+            progress.style.width = `${((currentExercise) / exercises.length) * 100}%`;
+            
+            if (exercise.type === "email") {
+                exerciseDiv.innerHTML = `
+                    <div class="email-header">
+                        <strong>De:</strong> ${exercise.content.from}<br>
+                        <strong>Asunto:</strong> ${exercise.content.subject}
+                    </div>
+                    <div class="email-content">
+                        ${exercise.content.body.replace(/\n/g, '<br>')}
+                    </div>
+                `;
+            }
+        }
+
+        function answer(userAnswer) {
+            const exercise = exercises[currentExercise];
+            const isCorrect = userAnswer === exercise.isPhishing;
+            
+            if (isCorrect) {
+                score++;
+            } else {
+                incorrectAnswers.push({
+                    question: currentExercise + 1,
+                    exercise: exercise,
+                    userAnswer: userAnswer
+                });
+            }
+            
+            currentExercise++;
+            
+            if (currentExercise < exercises.length) {
+                loadExercise();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            const resultTitle = document.getElementById('result-title');
+            const scoreDiv = document.getElementById('score');
+            const celebration = document.getElementById('celebration');
+            const feedback = document.getElementById('feedback');
+            
+            scoreDiv.textContent = `${score}/${exercises.length}`;
+            
+            if (score === exercises.length) {
+                celebration.textContent = "🎉🏆🎉";
+                resultTitle.textContent = "¡Excelente! ¡Eres un experto en detectar phishing!";
+                scoreDiv.className = "score perfect";
+                feedback.innerHTML = `
+                    <div style="background: #d4edda; border: 1px solid #c3e6cb; border-radius: 10px; padding: 20px; color: #155724;">
+                        <h3>🎯 ¡Puntuación Perfecta!</h3>
+                        <p>Has demostrado excelentes habilidades para identificar intentos de phishing. 
+                        Continúa aplicando estos conocimientos para proteger tu información personal y la de tu organización.</p>
+                        <p><strong>Sigue estos hábitos:</strong></p>
+                        <ul>
+                            <li>Siempre verifica los dominios de los remitentes</li>
+                            <li>Desconfía de la urgencia artificial</li>
+                            <li>Nunca proporciones información personal por email</li>
+                            <li>Usa autenticación de dos factores cuando sea posible</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (score >= 7) {
+                celebration.textContent = "👏";
+                resultTitle.textContent = "¡Muy bien! Tienes buenos conocimientos";
+                scoreDiv.className = "score good";
+                feedback.innerHTML = generateFeedback();
+            } else {
+                celebration.textContent = "📚";
+                resultTitle.textContent = "Necesitas reforzar algunos conceptos";
+                scoreDiv.className = "score needs-improvement";
+                feedback.innerHTML = generateFeedback();
+            }
+        }
+
+        function generateFeedback() {
+            if (incorrectAnswers.length === 0) return "";
+            
+            let feedbackHTML = `
+                <div class="feedback">
+                    <h3>📋 Áreas a reforzar:</h3>
+                    <p>Revisa estos conceptos para mejorar tu detección de phishing:</p>
+                    <ul>
+            `;
+            
+            const topics = new Set();
+            incorrectAnswers.forEach(item => {
+                const exercise = item.exercise;
+                if (exercise.isPhishing && !item.userAnswer) {
+                    topics.add("Identificación de dominios sospechosos");
+                    topics.add("Detección de urgencia artificial");
+                    topics.add("Reconocimiento de solicitudes de información personal");
+                }
+                if (!exercise.isPhishing && item.userAnswer) {
+                    topics.add("Diferenciación entre emails legítimos y sospechosos");
+                    topics.add("Verificación de fuentes confiables");
+                }
+            });
+            
+            topics.forEach(topic => {
+                feedbackHTML += `<li>${topic}</li>`;
+            });
+            
+            feedbackHTML += `
+                    </ul>
+                    <p><strong>Tip:</strong> Cuando dudes, siempre verifica directamente con la organización a través de sus canales oficiales.</p>
+                </div>
+            `;
+            
+            return feedbackHTML;
+        }
+
+        function restartQuiz() {
+            currentExercise = 0;
+            score = 0;
+            incorrectAnswers = [];
+            
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            loadExercise();
+        }
+
+        // Inicializar la aplicación
+        loadExercise();
+    </script>
+</body>
+</html>
