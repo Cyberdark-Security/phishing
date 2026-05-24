@@ -1,39 +1,29 @@
-# Entrenador Anti-Phishing 🛡️
+# 🛡️ Entrenador Anti-Phishing
 
-Este es un simulador educativo diseñado para ayudar a los usuarios a identificar intentos de phishing y diferenciar correos electrónicos legítimos de los maliciosos.
+![Banner del Proyecto](https://via.placeholder.com/800x200?text=Entrenador+Anti-Phishing)
 
-## Características
+## 📋 Propósito del Proyecto
+El **Entrenador Anti-Phishing** es una herramienta educativa interactiva diseñada para fortalecer la ciberseguridad de los usuarios. Su objetivo principal es enseñar a identificar señales de alerta en correos electrónicos sospechosos y diferenciar comunicaciones legítimas de intentos de fraude (phishing) en un entorno seguro y controlado.
 
-- **Simulación Realista**: Presenta diversos escenarios de correos electrónicos comunes.
-- **Retroalimentación Inmediata**: Explica por qué un correo es considerado phishing o legítimo.
-- **Seguridad por Diseño**: Implementa mejores prácticas de seguridad para prevenir vulnerabilidades comunes.
+## 🚀 Características Principales
+- 📧 **Simulaciones Realistas**: Escenarios basados en casos reales de correos electrónicos.
+- 💡 **Aprendizaje Interactivo**: Evaluación instantánea de cada decisión.
+- 📖 **Retroalimentación Educativa**: Explicaciones detalladas sobre las técnicas utilizadas por los atacantes.
+- 🎨 **Interfaz Intuitiva**: Diseño moderno y fácil de usar para todos los niveles de conocimiento.
 
-## Cómo empezar
+## 🛠️ Cómo Utilizar
+1. **Acceso**: Abre el archivo `index.html` en cualquier navegador moderno.
+2. **Evaluación**: Lee detenidamente el remitente, el asunto y el contenido de cada correo presentado.
+3. **Decisión**: Utiliza los botones para clasificar el correo como **⚠️ Phishing** o **✅ Legítimo**.
+4. **Resultados**: Al finalizar las 10 pruebas, recibe un puntaje y áreas de mejora sugeridas.
 
-1. Abre `index.html` en tu navegador favorito.
-2. Lee cada escenario de correo electrónico.
-3. Decide si crees que es phishing o legítimo.
-4. Revisa tus resultados al final para aprender y mejorar tus habilidades.
+---
 
-## Auditoría de Seguridad y Mejoras Realizadas
+## 📸 Vista Previa
+![Captura de pantalla del Simulador](https://via.placeholder.com/600x400?text=Vista+Previa+del+Simulador)
 
-Como parte de una auditoría de seguridad, se han implementado las siguientes mejoras:
+## 📚 ¿Por qué es importante?
+El phishing es uno de los vectores de ataque más comunes en la actualidad. Capacitar a los usuarios es la primera y más efectiva línea de defensa contra el robo de identidad y el fraude financiero.
 
-1. **Separación de Responsabilidades**: El código se ha modularizado dividiendo el HTML (`index.html`), CSS (`styles.css`) y JavaScript (`app.js`).
-2. **Prevención de XSS**: Se eliminó el uso de `innerHTML` en favor de `textContent` y manipulación segura del DOM (`createElement`, `appendChild`).
-3. **Política de Seguridad de Contenido (CSP)**: Se añadió una etiqueta `<meta>` de CSP para restringir el origen de los recursos y mitigar ataques de inyección.
-4. **Seguridad en Eventos**: Se eliminaron los manejadores de eventos en línea (`onclick`) y se reemplazaron por escuchadores de eventos en JavaScript (`addEventListener`).
-
-## Ideas para Protección Futura
-
-Para elevar aún más el nivel de protección y robustez del proyecto, se sugieren las siguientes ideas:
-
-- **Uso de Frameworks Modernos**: Migrar a React, Vue o Svelte para aprovechar su sanitización automática del DOM.
-- **Validación en Servidor**: Si se recogen estadísticas de los usuarios, implementar validación y saneamiento estricto en el lado del servidor.
-- **Pruebas Automatizadas**: Implementar pruebas unitarias y de integración para asegurar que la lógica de seguridad no se rompa con cambios futuros.
-- **Análisis Estático de Código (SAST)**: Integrar herramientas como ESLint con plugins de seguridad para detectar patrones peligrosos durante el desarrollo.
-- **Integración de Subresource Integrity (SRI)**: Si se utilizan librerías externas vía CDN, usar hashes SRI para garantizar que los archivos no han sido manipulados.
-
-## Licencia
-
-Este proyecto es de código abierto y está disponible para fines educativos.
+---
+*Educación para un mundo digital más seguro.*
